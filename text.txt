@@ -1,0 +1,2376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BU IDA STORE</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    color:white;
+    background:
+    linear-gradient(#080818cc,#080818f5),
+    url("https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1920&q=85")
+    center/cover fixed;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+    color:white;
+    font-weight:bold;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:#09091ddd;
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid #ffffff15;
+    text-align:center;
+    padding-bottom:18px;
+}
+
+.banner{
+    height:180px;
+    position:relative;
+    overflow:hidden;
+}
+
+.banner img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.banner:after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        transparent,
+        #09091d
+    );
+}
+
+.logo{
+    position:relative;
+    margin-top:-55px;
+    font-size:31px;
+    letter-spacing:4px;
+    text-shadow:0 4px 15px #000;
+}
+
+.logo span{
+    color:#c4b5fd;
+}
+
+.tagline{
+    color:#aaa;
+    margin:7px;
+}
+
+.cart-button{
+    padding:12px 22px;
+    border-radius:30px;
+    background:
+    linear-gradient(
+        135deg,
+        #7c3aed,
+        #ec4899
+    );
+}
+
+.container{
+    width:92%;
+    max-width:1150px;
+    margin:auto;
+    padding:30px 0 60px;
+}
+
+.search{
+    width:100%;
+    margin:20px 0;
+    padding:14px;
+    border:1px solid #ffffff15;
+    border-radius:12px;
+    outline:none;
+    color:white;
+    background:#ffffff0c;
+}
+
+.search::placeholder{
+    color:#aaa;
+}
+
+.products{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(190px,1fr));
+    gap:18px;
+}
+
+.card,
+.section{
+    border:1px solid #ffffff15;
+    border-radius:18px;
+    background:#ffffff0c;
+    backdrop-filter:blur(14px);
+}
+
+.card{
+    padding:12px;
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card img{
+    width:100%;
+    height:155px;
+    object-fit:cover;
+    border-radius:13px;
+}
+
+.card h3{
+    margin:10px 0 5px;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:20px;
+    background:#a78bfa33;
+    font-size:11px;
+}
+
+.price{
+    margin:10px 0;
+    color:#c4b5fd;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.primary{
+    width:100%;
+    padding:12px;
+    border-radius:11px;
+    background:
+    linear-gradient(
+        135deg,
+        #7c3aed,
+        #ec4899
+    );
+}
+
+.section{
+    margin-top:25px;
+    padding:20px;
+}
+
+.hidden{
+    display:none !important;
+}
+
+.cart-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:12px 0;
+    border-bottom:1px solid #ffffff12;
+}
+
+.qty button{
+    padding:5px 9px;
+    border-radius:7px;
+    color:#111;
+}
+
+.total{
+    margin:18px 0;
+    color:#c4b5fd;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.option{
+    display:block;
+    margin:8px 0;
+    padding:13px;
+    border-radius:10px;
+    background:#ffffff0b;
+}
+
+.note{
+    margin:12px 0;
+    padding:12px;
+    border-radius:10px;
+    color:#fed7aa;
+    background:#fb923c18;
+}
+
+.field{
+    margin:13px 0;
+}
+
+.field label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+.field input,
+.field textarea,
+.chat-input input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ffffff15;
+    outline:none;
+    border-radius:10px;
+    color:white;
+    background:#ffffff0c;
+}
+
+.field textarea{
+    min-height:85px;
+    resize:vertical;
+}
+
+#proofPreview{
+    display:none;
+    margin-top:12px;
+    padding:12px;
+    border-radius:10px;
+    background:#22c55e15;
+}
+
+#proofImage{
+    max-width:100%;
+    max-height:250px;
+    margin-top:8px;
+    border-radius:10px;
+}
+
+.receipt-row{
+    padding:10px 0;
+    border-bottom:1px dashed #ffffff20;
+}
+
+.receipt-row b{
+    display:inline-block;
+    min-width:125px;
+}
+
+/* TRACKING */
+
+.tracking-grid{
+    display:grid;
+    grid-template-columns:
+    1fr 1fr;
+    gap:20px;
+}
+
+.step{
+    display:flex;
+    gap:13px;
+    opacity:.3;
+}
+
+.step.active{
+    opacity:1;
+}
+
+.step-icon{
+    width:42px;
+    height:42px;
+    min-width:42px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:
+    linear-gradient(
+        135deg,
+        #7c3aed,
+        #ec4899
+    );
+}
+
+.step p{
+    margin-top:5px;
+    color:#aaa;
+    font-size:13px;
+}
+
+.line{
+    width:3px;
+    height:30px;
+    margin-left:19px;
+    background:#7c3aed;
+}
+
+.map{
+    min-height:280px;
+    position:relative;
+    overflow:hidden;
+    border-radius:16px;
+    background:
+    linear-gradient(
+        135deg,
+        #17233d,
+        #102a20
+    );
+}
+
+.map:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+    repeating-linear-gradient(
+        25deg,
+        transparent 0 35px,
+        #ffffff12 36px 38px
+    ),
+    repeating-linear-gradient(
+        115deg,
+        transparent 0 45px,
+        #ffffff0d 46px 48px
+    );
+}
+
+.route{
+    position:absolute;
+    left:10%;
+    right:10%;
+    top:52%;
+    height:5px;
+    border-radius:10px;
+    background:#c4b5fd;
+}
+
+.location{
+    position:absolute;
+    top:45%;
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    z-index:3;
+}
+
+.store{
+    left:7%;
+    background:#7c3aed;
+}
+
+.home{
+    right:7%;
+    background:#ec4899;
+}
+
+.courier{
+    left:9%;
+    background:#22c55e;
+    border:3px solid white;
+    transition:left 2s linear;
+}
+
+.map-label{
+    position:absolute;
+    bottom:12px;
+    left:12px;
+    right:12px;
+    padding:9px;
+    border-radius:8px;
+    background:#0009;
+    z-index:5;
+    font-size:12px;
+}
+
+/* CHAT */
+
+.chat-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.avatar{
+    width:52px;
+    height:52px;
+    object-fit:cover;
+    border-radius:50%;
+    border:2px solid #c4b5fd;
+}
+
+.online{
+    color:#4ade80;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.chat-actions{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+}
+
+.round-button{
+    width:43px;
+    height:43px;
+    border-radius:50%;
+    background:#ffffff12;
+}
+
+.chat-area{
+    height:390px;
+    overflow-y:auto;
+    margin-top:15px;
+    padding:15px;
+    border-radius:15px;
+    background:#05051055;
+}
+
+.message{
+    max-width:80%;
+    margin:10px 0;
+    padding:10px 13px;
+    border-radius:16px;
+}
+
+.message p{
+    margin-top:5px;
+    line-height:1.4;
+}
+
+.message small{
+    display:block;
+    margin-top:5px;
+    color:#aaa;
+    font-size:10px;
+}
+
+.message img{
+    max-width:220px;
+    margin-top:6px;
+    border-radius:10px;
+}
+
+.me{
+    margin-left:auto;
+    background:#7c3aed55;
+    border-bottom-right-radius:4px;
+}
+
+.them{
+    margin-right:auto;
+    background:#ffffff12;
+    border-bottom-left-radius:4px;
+}
+
+.typing{
+    display:none;
+    margin:5px;
+    color:#aaa;
+    font-size:12px;
+}
+
+.chat-input{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.chat-input input{
+    flex:1;
+}
+
+.chat-input button{
+    width:auto;
+    padding:0 18px;
+}
+
+/* CALL */
+
+.call-screen{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:#090916;
+}
+
+.call-screen img{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:50%;
+    border:3px solid #c4b5fd;
+}
+
+.call-name{
+    margin-top:17px;
+    font-size:25px;
+}
+
+.call-status{
+    margin-top:7px;
+    color:#aaa;
+}
+
+.call-buttons{
+    display:flex;
+    gap:18px;
+    margin-top:35px;
+}
+
+.call-button{
+    width:62px;
+    height:62px;
+    border-radius:50%;
+    font-size:22px;
+    background:#ffffff18;
+}
+
+.end-call{
+    background:#ef4444;
+}
+
+footer{
+    padding:30px;
+    text-align:center;
+    color:#888;
+}
+
+@media(max-width:700px){
+
+    .tracking-grid{
+        grid-template-columns:1fr;
+    }
+
+    .logo{
+        font-size:23px;
+    }
+
+    .banner{
+        height:145px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="banner">
+
+<img
+src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=85"
+alt="Banner anime">
+
+</div>
+
+<div class="logo">
+✦ BU <span>IDA</span> STORE ✦
+</div>
+
+<div class="tagline">
+Modern • Elegant • Simulasi Belanja
+</div>
+
+<button
+class="cart-button"
+onclick="goCart()">
+
+🛒 Keranjang
+(<span id="cartCount">0</span>)
+
+</button>
+
+</header>
+
+
+<main class="container">
+
+<h2>✨ Produk Pilihan</h2>
+
+<input
+class="search"
+id="search"
+placeholder="🔎 Cari produk..."
+oninput="renderProducts()">
+
+<div
+class="products"
+id="products">
+</div>
+
+
+<!-- KERANJANG -->
+
+<section
+class="section"
+id="cart">
+
+<h2>🛒 Keranjang</h2>
+
+<div id="cartItems">
+</div>
+
+<div class="total">
+Total:
+<span id="total">
+Rp0
+</span>
+</div>
+
+<button
+class="primary"
+onclick="openPayment()">
+
+💳 Lanjut Pembayaran
+
+</button>
+
+</section>
+
+
+<!-- PEMBAYARAN -->
+
+<section
+class="section hidden"
+id="payment">
+
+<h2>💳 Pembayaran</h2>
+
+<p style="color:#aaa;margin:7px 0">
+Semua metode pembayaran di sini hanya simulasi.
+</p>
+
+<label class="option">
+<input
+type="radio"
+name="payment"
+value="Cash"
+onchange="paymentChanged()">
+
+💵 Cash
+</label>
+
+<label class="option">
+<input
+type="radio"
+name="payment"
+value="Transfer Bank"
+onchange="paymentChanged()">
+
+🏦 Transfer Bank
+</label>
+
+<label class="option">
+<input
+type="radio"
+name="payment"
+value="E-Wallet"
+onchange="paymentChanged()">
+
+📱 E-Wallet
+</label>
+
+<label class="option">
+<input
+type="radio"
+name="payment"
+value="QRIS"
+onchange="paymentChanged()">
+
+🔳 QRIS
+</label>
+
+
+<div
+id="walletBox"
+class="hidden">
+
+<div class="note">
+
+<b>E-Wallet Bu Ida</b>
+
+<br><br>
+
+Nomor toko:
+<b>0857-XXXX-XXXX</b>
+
+<br><br>
+
+⚠️ Jangan gunakan untuk transaksi nyata.
+
+</div>
+
+<h3>
+🧾 Bukti Pembayaran
+</h3>
+
+<input
+type="file"
+id="paymentProof"
+accept="image/*"
+onchange="previewProof(event)">
+
+<div id="proofPreview">
+
+<b>✅ Bukti pembayaran dimasukkan</b>
+
+<br>
+
+<img
+id="proofImage"
+alt="Bukti">
+
+</div>
+
+</div>
+
+
+<div
+id="qrisBox"
+class="hidden"
+style="text-align:center">
+
+<div class="note">
+QRIS hanya contoh tugas sekolah.
+</div>
+
+<img
+src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=BU-IDA-STORE-SIMULASI"
+width="220"
+style="background:white;padding:8px;border-radius:12px"
+alt="QRIS simulasi">
+
+</div>
+
+
+<button
+class="primary"
+style="margin-top:15px"
+onclick="toAddress()">
+
+➡️ Lanjut ke Alamat
+
+</button>
+
+</section>
+
+
+<!-- ALAMAT -->
+
+<section
+class="section hidden"
+id="address">
+
+<h2>
+📦 Alamat Pengiriman
+</h2>
+
+<div class="note">
+Data ini hanya untuk simulasi.
+</div>
+
+<div class="field">
+
+<label>
+Nama
+</label>
+
+<input
+id="customerName"
+placeholder="Nama penerima">
+
+</div>
+
+<div class="field">
+
+<label>
+Nomor Telepon
+</label>
+
+<input
+id="phone"
+placeholder="08xxxxxxxxxx">
+
+</div>
+
+<div class="field">
+
+<label>
+Alamat Lengkap
+</label>
+
+<textarea
+id="addressText"
+placeholder="Alamat lengkap"></textarea>
+
+</div>
+
+<div class="field">
+
+<label>
+Kota
+</label>
+
+<input
+id="city"
+placeholder="Kota tujuan">
+
+</div>
+
+<div class="field">
+
+<label>
+Catatan
+</label>
+
+<textarea
+id="orderNote"
+placeholder="Catatan pesanan"></textarea>
+
+</div>
+
+<button
+class="primary"
+onclick="finishOrder()">
+
+📦 Buat Pesanan
+
+</button>
+
+</section>
+
+
+<!-- STRUK -->
+
+<section
+class="section hidden"
+id="receipt">
+
+<h2>
+🎉 Pesanan Berhasil!
+</h2>
+
+<div class="receipt-row">
+<b>Nomor Pesanan</b>
+<span id="orderNumber"></span>
+</div>
+
+<div class="receipt-row">
+<b>Nama</b>
+<span id="receiptName"></span>
+</div>
+
+<div class="receipt-row">
+<b>Alamat</b>
+<span id="receiptAddress"></span>
+</div>
+
+<div class="receipt-row">
+<b>Kota</b>
+<span id="receiptCity"></span>
+</div>
+
+<div class="receipt-row">
+<b>Pembayaran</b>
+<span id="receiptPayment"></span>
+</div>
+
+<div class="receipt-row">
+<b>Total</b>
+<span id="receiptTotal"></span>
+</div>
+
+</section>
+
+
+<!-- TRACKING -->
+
+<section
+class="section hidden"
+id="tracking">
+
+<h2>
+📦 Pelacakan Paket
+</h2>
+
+<div class="note">
+
+🚚 Status paket akan berubah otomatis.
+<br>
+Ini hanya simulasi dan bukan GPS sungguhan.
+
+</div>
+
+
+<div class="tracking-grid">
+
+
+<div>
+
+<div class="step active">
+
+<div class="step-icon">
+🛒
+</div>
+
+<div>
+
+<b>
+Pesanan Dibuat
+</b>
+
+<p>
+Pesanan diterima toko.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="line"></div>
+
+
+<div class="step">
+
+<div class="step-icon">
+📦
+</div>
+
+<div>
+
+<b>
+Pesanan Diproses
+</b>
+
+<p id="step1">
+Menunggu.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="line"></div>
+
+
+<div class="step">
+
+<div class="step-icon">
+🚚
+</div>
+
+<div>
+
+<b>
+Diambil Kurir
+</b>
+
+<p id="step2">
+Menunggu.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="line"></div>
+
+
+<div class="step">
+
+<div class="step-icon">
+🛣️
+</div>
+
+<div>
+
+<b>
+Dalam Perjalanan
+</b>
+
+<p id="step3">
+Menunggu.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="line"></div>
+
+
+<div class="step">
+
+<div class="step-icon">
+🏠
+</div>
+
+<div>
+
+<b>
+Selesai
+</b>
+
+<p id="step4">
+Menunggu.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="map">
+
+<div class="route"></div>
+
+<div class="location store">
+🏪
+</div>
+
+<div
+class="location courier"
+id="courierDot">
+🚚
+</div>
+
+<div class="location home">
+🏠
+</div>
+
+<div
+class="map-label"
+id="mapLabel">
+
+Kurir belum berangkat.
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CHAT -->
+
+<section
+class="section hidden"
+id="chat">
+
+<div class="chat-header">
+
+<img
+class="avatar"
+src="https://i.pravatar.cc/150?img=12"
+alt="Foto Raka">
+
+<div>
+
+<h2>
+Raka — Pengantar
+</h2>
+
+<div class="online">
+● Online • Simulasi
+</div>
+
+</div>
+
+</div>
+
+
+<div class="chat-actions">
+
+<button
+class="round-button"
+onclick="startCall('audio')">
+
+📞
+
+</button>
+
+<button
+class="round-button"
+onclick="startCall('video')">
+
+📹
+
+</button>
+
+<button
+class="round-button"
+onclick="document.getElementById('chatPhoto').click()">
+
+📷
+
+</button>
+
+<input
+type="file"
+id="chatPhoto"
+accept="image/*"
+class="hidden"
+onchange="sendPhoto(event)">
+
+</div>
+
+
+<div
+class="chat-area"
+id="chatArea">
+
+<div class="message them">
+
+<b>
+Raka
+</b>
+
+<p>
+Halo! Saya Raka, pengantar dari Bu Ida Store. Paketmu sedang saya siapkan.
+</p>
+
+<small>
+Baru saja ✓✓
+</small>
+
+</div>
+
+</div>
+
+
+<div
+class="typing"
+id="typing">
+
+Raka sedang mengetik...
+
+</div>
+
+
+<div class="chat-input">
+
+<input
+id="chatInput"
+placeholder="Tulis pesan..."
+onkeydown="if(event.key==='Enter')sendMessage()">
+
+<button
+class="primary"
+style="width:auto"
+onclick="sendMessage()">
+
+Kirim
+
+</button>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+✦ BU IDA STORE ✦
+<br><br>
+Semua pembayaran, GPS, chat, telepon,
+video call dan pengiriman adalah simulasi tugas sekolah.
+
+</footer>
+
+
+<!-- CALL SCREEN -->
+
+<div
+class="call-screen"
+id="callScreen">
+
+<img
+src="https://i.pravatar.cc/150?img=12"
+alt="Raka">
+
+<div class="call-name">
+Raka — Pengantar
+</div>
+
+<div
+class="call-status"
+id="callStatus">
+
+Menghubungkan...
+</div>
+
+<div class="call-buttons">
+
+<button class="call-button">
+🎙️
+</button>
+
+<button class="call-button">
+📹
+</button>
+
+<button
+class="call-button end-call"
+onclick="endCall()">
+
+☎
+
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ================= PRODUK ================= */
+
+const products = [
+
+[
+"Sabun",
+"Rumah",
+5000,
+"https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Botol Minum",
+"Peralatan",
+15000,
+"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Sepatu",
+"Fashion",
+100000,
+"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Tas",
+"Fashion",
+75000,
+"https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Beras",
+"Sembako",
+65000,
+"https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Minyak Goreng",
+"Sembako",
+18000,
+"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Gula",
+"Sembako",
+17000,
+"https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Susu",
+"Minuman",
+12000,
+"https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Kopi",
+"Minuman",
+10000,
+"https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Teh",
+"Minuman",
+8000,
+"https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Roti",
+"Makanan",
+13000,
+"https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Mi Instan",
+"Makanan",
+4000,
+"https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Shampoo",
+"Perawatan",
+18000,
+"https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Jam Tangan",
+"Fashion",
+85000,
+"https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Parfum",
+"Perawatan",
+45000,
+"https://images.unsplash.com/photo-1585386959984-a4155224a1ad?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Buku",
+"Alat Tulis",
+25000,
+"https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Novel",
+"Bacaan",
+35000,
+"https://images.unsplash.com/photo-1589998059171-988d887df646?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Mainan",
+"Hiburan",
+30000,
+"https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Lampu Meja",
+"Elektronik",
+55000,
+"https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Keyboard",
+"Elektronik",
+120000,
+"https://images.unsplash.com/photo-1586953208448-b95a79798f07?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Headset",
+"Elektronik",
+90000,
+"https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?auto=format&fit=crop&w=600&q=80"
+],
+
+[
+"Mouse",
+"Elektronik",
+50000,
+"https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=600&q=80"
+]
+
+];
+
+
+let cart = [];
+
+let selectedPayment = "";
+
+let proofUploaded = false;
+
+let trackingStarted = false;
+
+
+/* ================= UTIL ================= */
+
+function rupiah(number){
+
+    return "Rp" +
+    number.toLocaleString("id-ID");
+
+}
+
+function show(id){
+
+    document
+    .getElementById(id)
+    .classList.remove("hidden");
+
+}
+
+function hide(id){
+
+    document
+    .getElementById(id)
+    .classList.add("hidden");
+
+}
+
+
+/* ================= PRODUCTS ================= */
+
+function renderProducts(){
+
+    const search =
+    document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+    const list =
+    products
+    .map((p,index)=>({p,index}))
+    .filter(x=>
+
+        (
+            x.p[0]+" "+
+            x.p[1]
+        )
+        .toLowerCase()
+        .includes(search)
+
+    );
+
+    document
+    .getElementById("products")
+    .innerHTML =
+
+    list.map(x=>`
+
+        <div class="card">
+
+            <img
+            src="${x.p[3]}"
+            alt="${x.p[0]}">
+
+            <h3>
+            ${x.p[0]}
+            </h3>
+
+            <span class="badge">
+            ${x.p[1]}
+            </span>
+
+            <div class="price">
+            ${rupiah(x.p[2])}
+            </div>
+
+            <button
+            class="primary"
+            onclick="addCart(${x.index})">
+
+            🛒 Tambahkan
+
+            </button>
+
+        </div>
+
+    `).join("");
+
+}
+
+
+/* ================= CART ================= */
+
+function addCart(index){
+
+    const product =
+    products[index];
+
+    const existing =
+    cart.find(
+        x=>x.name===product[0]
+    );
+
+    if(existing){
+
+        existing.qty++;
+
+    }else{
+
+        cart.push({
+
+            name:product[0],
+
+            price:product[2],
+
+            qty:1
+
+        });
+
+    }
+
+    renderCart();
+
+}
+
+
+function renderCart(){
+
+    let total = 0;
+
+    let count = 0;
+
+    const box =
+    document
+    .getElementById("cartItems");
+
+
+    if(cart.length===0){
+
+        box.innerHTML =
+        `<p style="color:#aaa">
+        Keranjang masih kosong.
+        </p>`;
+
+    }else{
+
+        box.innerHTML =
+
+        cart.map((item,index)=>{
+
+            total +=
+            item.price *
+            item.qty;
+
+            count +=
+            item.qty;
+
+            return `
+
+            <div class="cart-row">
+
+                <div>
+
+                    <b>
+                    ${item.name}
+                    </b>
+
+                    <br>
+
+                    ${rupiah(item.price)}
+
+                </div>
+
+                <div>
+
+                    <button
+                    onclick="minus(${index})">
+
+                    −
+
+                    </button>
+
+                    ${item.qty}
+
+                    <button
+                    onclick="plus(${index})">
+
+                    +
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+    }
+
+
+    document
+    .getElementById("total")
+    .textContent =
+    rupiah(total);
+
+    document
+    .getElementById("cartCount")
+    .textContent =
+    count;
+
+}
+
+
+function plus(index){
+
+    cart[index].qty++;
+
+    renderCart();
+
+}
+
+
+function minus(index){
+
+    cart[index].qty--;
+
+    if(cart[index].qty<=0){
+
+        cart.splice(index,1);
+
+    }
+
+    renderCart();
+
+}
+
+
+function goCart(){
+
+    document
+    .getElementById("cart")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+/* ================= PAYMENT ================= */
+
+function openPayment(){
+
+    if(cart.length===0){
+
+        alert(
+            "Keranjang masih kosong."
+        );
+
+        return;
+
+    }
+
+    show("payment");
+
+    document
+    .getElementById("payment")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+function paymentChanged(){
+
+    selectedPayment =
+    document
+    .querySelector(
+        'input[name="payment"]:checked'
+    )
+    .value;
+
+
+    document
+    .getElementById("walletBox")
+    .classList.toggle(
+        "hidden",
+        selectedPayment!=="E-Wallet"
+    );
+
+
+    document
+    .getElementById("qrisBox")
+    .classList.toggle(
+        "hidden",
+        selectedPayment!=="QRIS"
+    );
+
+}
+
+
+function previewProof(event){
+
+    const file =
+    event.target.files[0];
+
+    if(!file){
+
+        return;
+
+    }
+
+    if(
+        !file.type.startsWith("image/")
+    ){
+
+        alert(
+            "Pilih file gambar."
+        );
+
+        return;
+
+    }
+
+
+    const reader =
+    new FileReader();
+
+
+    reader.onload=function(e){
+
+        document
+        .getElementById("proofImage")
+        .src =
+        e.target.result;
+
+        document
+        .getElementById("proofPreview")
+        .style.display =
+        "block";
+
+        proofUploaded = true;
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+function toAddress(){
+
+    if(!selectedPayment){
+
+        alert(
+            "Pilih metode pembayaran."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        selectedPayment==="E-Wallet"
+        &&
+        !proofUploaded
+    ){
+
+        alert(
+            "Masukkan foto bukti pembayaran terlebih dahulu."
+        );
+
+        return;
+
+    }
+
+
+    show("address");
+
+    document
+    .getElementById("address")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+/* ================= ORDER ================= */
+
+function finishOrder(){
+
+    const name =
+    document
+    .getElementById("customerName")
+    .value.trim();
+
+
+    const phone =
+    document
+    .getElementById("phone")
+    .value.trim();
+
+
+    const address =
+    document
+    .getElementById("addressText")
+    .value.trim();
+
+
+    const city =
+    document
+    .getElementById("city")
+    .value.trim();
+
+
+    if(
+        !name ||
+        !phone ||
+        !address ||
+        !city
+    ){
+
+        alert(
+            "Lengkapi data alamat terlebih dahulu."
+        );
+
+        return;
+
+    }
+
+
+    const total =
+    cart.reduce(
+        (sum,item)=>
+        sum +
+        item.price *
+        item.qty,
+        0
+    );
+
+
+    const orderNumber =
+    "BUIDA-" +
+    Math.floor(
+        100000 +
+        Math.random()*900000
+    );
+
+
+    document
+    .getElementById("orderNumber")
+    .textContent =
+    orderNumber;
+
+
+    document
+    .getElementById("receiptName")
+    .textContent =
+    name;
+
+
+    document
+    .getElementById("receiptAddress")
+    .textContent =
+    address;
+
+
+    document
+    .getElementById("receiptCity")
+    .textContent =
+    city;
+
+
+    document
+    .getElementById("receiptPayment")
+    .textContent =
+    selectedPayment;
+
+
+    document
+    .getElementById("receiptTotal")
+    .textContent =
+    rupiah(total);
+
+
+    show("receipt");
+
+    show("tracking");
+
+    show("chat");
+
+
+    document
+    .getElementById("tracking")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+
+    startTracking();
+
+}
+
+
+/* ================= AUTOMATIC TRACKING ================= */
+
+function startTracking(){
+
+    if(trackingStarted){
+
+        return;
+
+    }
+
+    trackingStarted = true;
+
+
+    const steps =
+    document
+    .querySelectorAll(".step");
+
+
+    const messages = [
+
+        "Pesanan sedang diproses oleh toko.",
+
+        "Kurir sudah mengambil paket.",
+
+        "Paket sedang menuju kota tujuan.",
+
+        "Paket sudah sampai di alamat penerima."
+
+    ];
+
+
+    const labels = [
+
+        "Pesanan sedang diproses.",
+
+        "Kurir sedang mengambil paket.",
+
+        "Kurir sedang dalam perjalanan.",
+
+        "Paket sudah sampai."
+
+    ];
+
+
+    const positions = [
+
+        "28%",
+
+        "48%",
+
+        "70%",
+
+        "88%"
+
+    ];
+
+
+    let current = 1;
+
+
+    const timer =
+    setInterval(()=>{
+
+        steps[current]
+        .classList
+        .add("active");
+
+
+        document
+        .getElementById(
+            "step"+current
+        )
+        .textContent =
+        messages[current-1];
+
+
+        document
+        .getElementById(
+            "mapLabel"
+        )
+        .textContent =
+        labels[current-1];
+
+
+        document
+        .getElementById(
+            "courierDot"
+        )
+        .style.left =
+        positions[current-1];
+
+
+        current++;
+
+
+        if(current>4){
+
+            clearInterval(timer);
+
+        }
+
+
+    },5000);
+
+}
+
+
+/* ================= CHAT ================= */
+
+function addMessage(
+    text,
+    sender,
+    image=null
+){
+
+    const chat =
+    document
+    .getElementById("chatArea");
+
+
+    const message =
+    document
+    .createElement("div");
+
+
+    message.className =
+    "message " +
+    (
+        sender==="me"
+        ? "me"
+        : "them"
+    );
+
+
+    const name =
+    document
+    .createElement("b");
+
+
+    name.textContent =
+    sender==="me"
+    ? "Kamu"
+    : "Raka";
+
+
+    message.appendChild(name);
+
+
+    if(image){
+
+        const img =
+        document
+        .createElement("img");
+
+        img.src = image;
+
+        message.appendChild(img);
+
+    }else{
+
+        const p =
+        document
+        .createElement("p");
+
+        p.textContent =
+        text;
+
+        message.appendChild(p);
+
+    }
+
+
+    const time =
+    document
+    .createElement("small");
+
+
+    time.textContent =
+    new Date()
+    .toLocaleTimeString(
+        "id-ID",
+        {
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    )
+    + " ✓✓";
+
+
+    message.appendChild(time);
+
+
+    chat.appendChild(message);
+
+
+    chat.scrollTop =
+    chat.scrollHeight;
+
+}
+
+
+function sendMessage(){
+
+    const input =
+    document
+    .getElementById("chatInput");
+
+
+    const text =
+    input.value.trim();
+
+
+    if(!text){
+
+        return;
+
+    }
+
+
+    addMessage(
+        text,
+        "me"
+    );
+
+
+    input.value="";
+
+
+    const typing =
+    document
+    .getElementById("typing");
+
+
+    typing.style.display =
+    "block";
+
+
+    setTimeout(()=>{
+
+        typing.style.display =
+        "none";
+
+
+        const lower =
+        text.toLowerCase();
+
+
+        let reply =
+        "Baik, pesan kamu sudah saya terima.";
+
+
+        if(
+            lower.includes("halo") ||
+            lower.includes("hai")
+        ){
+
+            reply =
+            "Halo! Saya Raka, pengantar dari Bu Ida Store.";
+
+        }
+
+
+        else if(
+            lower.includes("dimana") ||
+            lower.includes("di mana")
+        ){
+
+            reply =
+            "Paketmu sedang dalam perjalanan menuju kota tujuan.";
+
+        }
+
+
+        else if(
+            lower.includes("kapan")
+        ){
+
+            reply =
+            "Perkiraan paket sampai hari ini dalam simulasi.";
+
+        }
+
+
+        else if(
+            lower.includes("terima kasih") ||
+            lower.includes("makasih")
+        ){
+
+            reply =
+            "Sama-sama! Semoga paketnya sampai dengan aman.";
+
+        }
+
+
+        addMessage(
+            reply,
+            "them"
+        );
+
+
+    },1200);
+
+}
+
+
+/* ================= SEND PHOTO ================= */
+
+function sendPhoto(event){
+
+    const file =
+    event.target.files[0];
+
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    if(
+        !file.type.startsWith("image/")
+    ){
+
+        alert(
+            "Pilih file foto."
+        );
+
+        return;
+
+    }
+
+
+    const reader =
+    new FileReader();
+
+
+    reader.onload=function(e){
+
+        addMessage(
+            "",
+            "me",
+            e.target.result
+        );
+
+
+        setTimeout(()=>{
+
+            addMessage(
+                "Foto sudah saya terima.",
+                "them"
+            );
+
+        },900);
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+/* ================= CALL SIMULATION ================= */
+
+let callTimer;
+
+
+function startCall(type){
+
+    const screen =
+    document
+    .getElementById("callScreen");
+
+
+    const status =
+    document
+    .getElementById("callStatus");
+
+
+    screen.style.display =
+    "flex";
+
+
+    status.textContent =
+    (
+        type==="video"
+        ? "📹 Video call"
+        : "📞 Panggilan suara"
+    )
+    +
+    " • Menghubungkan...";
+
+
+    clearTimeout(callTimer);
+
+
+    callTimer =
+    setTimeout(()=>{
+
+        status.textContent =
+        (
+            type==="video"
+            ? "📹 Video call"
+            : "📞 Panggilan suara"
+        )
+        +
+        " • Aktif • Simulasi";
+
+    },1500);
+
+}
+
+
+function endCall(){
+
+    document
+    .getElementById("callScreen")
+    .style.display =
+    "none";
+
+
+    clearTimeout(callTimer);
+
+}
+
+
+/* ================= START ================= */
+
+renderProducts();
+
+renderCart();
+
+</script>
+
+</body>
+</html>
